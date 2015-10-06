@@ -1,3 +1,4 @@
+
 %--------------------------------%
 %--------Syrtis em ProLog--------%
 %--------------------------------%
@@ -9,12 +10,43 @@
 
 syrtis :-
 	B = _,
-	criaTabuleiro(B, 0, 7),
+	%criaTabuleiro(B, 0, 7),%
+	criaTabuleiroTesteFinal(B),
 	write('\n\n'),
 	imprimeTabuleiro(B, 0, 7).
 
-	
+%--------------------------------%
+%------Tabuleiros de teste--------%
+%--------------------------------%
+criaTabuleiroTesteInicial(B) :-
+	L0 = [ 'vazio', 'vazio', 'o-azul', 'quadrado-vermelho', 'o-azul', 'vazio', 'vazio'],
+	L1 = [ 'vazio', 'quadrado-vermelho', 'o-azul', 'quadrado-vermelho', 'o-vermelho', 'quadrado-vermelho', 'vazio'],
+	L2 = [ 'o-vermelho', 'o-azul', 'quadrado-azul', 'quadrado-vermelho', 'o-vermelho', 'quadrado-azul', 'quadrado-azul'],
+	L3 = [ 'o-vermelho', 'quadrado-azul', 'quadrado-azul', 'vazio', 'o-vermelho', 'o-vermelho', 'quadrado-azul'],
+	L4 = [ 'o-vermelho', 'o-vermelho', 'quadrado-azul', 'o-azul', 'o-vermelho', 'quadrado-vermelho', 'quadrado-azul'],
+	L5 = [ 'vazio', 'o-azul', 'quadrado-azul', 'o-azul', 'quadrado-vermelho', 'o-azul', 'vazio'],
+	L6 = [ 'vazio', 'vazio', 'quadrado-vermelho', 'o-azul', 'quadrado-vermelho', 'vazio', 'vazio'],
+	B = [L0, L1, L2, L3, L4, L5, L6].
 
+criaTabuleiroTesteIntermedio(B) :-
+	L0 = [ 'vazio', 'vazio', 'vazio', 'vazio', 'quadrado-azul', 'vazio', 'vazio'],
+	L1 = [ 'vazio', 'vazio', 'quadrado-vermelho', 'o-vermelho', 'o-azul', 'quadrado-vermelho', 'vazio'],
+	L2 = [ 'vazio', 'vazio', 'quadrado-vermelho', 'vazio', 'o-vermelho', 'vazio', 'vazio'],
+	L3 = [ 'vazio', 'vazio', 'quadrado-azul', 'vazio', 'vazio', 'vazio', 'vazio'],
+	L4 = [ 'vazio', 'vazio', 'o-vermelho', 'quadrado-azul', 'o-azul', 'vazio', 'vazio'],
+	L5 = [ 'vazio', 'quadrado-azul', 'o-azul', 'o-azul', 'quadrado-vermelho', 'vazio', 'vazio'],
+	L6 = [ 'vazio', 'vazio', 'vazio', 'vazio', 'vazio', 'vazio', 'vazio'],
+	B = [L0, L1, L2, L3, L4, L5, L6].
+	
+criaTabuleiroTesteFinal(B) :-
+	L0 = [ 'vazio', 'vazio', 'vazio', 'vazio', 'vazio', 'vazio', 'vazio'],
+	L1 = [ 'vazio', 'vazio', 'quadrado-azul', 'vazio','vazio', 'vazio', 'vazio'],
+	L2 = [ 'vazio', 'vazio', 'o-vermelho', 'quadrado-azul', 'vazio', 'vazio', 'vazio'],
+	L3 = [ 'vazio', 'vazio', 'o-vermelho', 'o-azul', 'o-vermelho', 'vazio', 'vazio'],
+	L4 = [ 'vazio', 'quadrado-azul', 'o-azul', 'quadrado-vermelho', 'quadrado-vermelho', 'quadrado-vermelho', 'vazio'],
+	L5 = [ 'vazio', 'vazio', 'vazio', 'vazio', 'vazio', 'vazio', 'vazio'],
+	L6 = [ 'vazio', 'vazio', 'vazio', 'vazio', 'vazio', 'vazio', 'vazio'],
+	B = [L0, L1, L2, L3, L4, L5, L6].
 	
 %-------------------------------%
 %-------------------------------%
@@ -34,7 +66,7 @@ criaLista(_, A, A).
 criaLista([H | T], X, S) :-
 	X \= S,
 	X1 is X + 1,
-	H = ' ',
+	H = 'quadrado-azul',
 	criaLista(T, X1, S).
 
 
@@ -42,6 +74,21 @@ criaLista([H | T], X, S) :-
 %--Predicados para vizualizar--%
 %-----------tabuleiro----------%
 %------------------------------%
+
+interpreta('o-vermelho') :-
+	ansi_format([bold,fg(red)], '( )', []).
+
+interpreta('o-azul') :-
+	ansi_format([bold,fg(blue)], '( )', []).
+	
+interpreta('quadrado-vermelho') :-
+	ansi_format([bold,fg(red)], '[ ]', []).
+	
+interpreta('quadrado-azul') :-
+	ansi_format([bold,fg(blue)], '[ ]', []).
+
+interpreta(_) :-
+	write('   ').
 
 imprimeNCol(0, 0, S) :-
 	write('   | '),
@@ -64,20 +111,19 @@ imprimeNCol(_, _, _).
 
 imprimeLinha(_,_, S, S) :-
 	write('\n').	
-	
+
 imprimeLinha([H | T], Y, 0, S) :-
 	write(' '),
 	write(Y),
-	write(' | '),
-	write(H),
 	write(' |'),
+	interpreta(H),
+	write('|'),
 	imprimeLinha(T, Y, 1, S).
 
 imprimeLinha([H | T], Y, X, S) :- 
 	X < S,
-	write(' '),
-	write(H),
-	write(' |'),
+	interpreta(H),
+	write('|'),
 	A is X + 1,
 	imprimeLinha(T, Y, A, S).
 
