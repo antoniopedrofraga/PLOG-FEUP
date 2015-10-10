@@ -16,8 +16,9 @@ syrtis :-
 	imprimeTabuleiro(B, 0, 7).
 
 %--------------------------------%
-%------Tabuleiros de teste--------%
+%------Tabuleiros de teste-------%
 %--------------------------------%
+
 criaTabuleiroTesteInicial(B) :-
 	L0 = [ 'vazio', 'vazio', 'o-azul', 'quadrado-vermelho', 'o-azul', 'vazio', 'vazio'],
 	L1 = [ 'vazio', 'quadrado-vermelho', 'o-azul', 'quadrado-vermelho', 'o-vermelho', 'quadrado-vermelho', 'vazio'],
