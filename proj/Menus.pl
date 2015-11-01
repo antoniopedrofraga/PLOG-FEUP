@@ -67,10 +67,7 @@ menuJogo(Tabuleiro, [Torre1 | Resto], N) :-
 	obtemNumeroDeTabuleiro(Linha),
 	novaLinha(3),
 	Tabuleiro2 = _,
-	!,
-	colocaTorre(Tabuleiro, Tabuleiro2, Coluna, Linha, [Torre1 | Resto], N),
-	N1 is N + 1,
-	menuJogo(Tabuleiro2, Resto, N1).
+	colocaTorre(Tabuleiro, Tabuleiro2, Coluna, Linha, [Torre1 | Resto], N).
 	
 menuJogoAviso(Tabuleiro, Torres, N) :-
 	limpaEcra,

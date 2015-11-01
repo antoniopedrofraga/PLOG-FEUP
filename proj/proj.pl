@@ -133,11 +133,13 @@ colocaCasaEmLinha(_, _, _, _, _).
 %++++++++++++++++++++++ Colocar Torres ++++++++++++++++++++++%
 
 
-colocaTorre(Tabuleiro, Tabuleiro2, X, Y, [Torre | _], _) :-
-		colocaTorre(Tabuleiro, Tabuleiro2, 0, 0, X, Y, Torre).
+colocaTorre(Tabuleiro, Tabuleiro2, X, Y, [Torre | Resto], N) :-
+		colocaTorre(Tabuleiro, Tabuleiro2, 0, 0, X, Y, Torre),
+		N1 is N + 1,
+		menuJogo(Tabuleiro2, Resto, N1).
 
 colocaTorre(Tabuleiro, _, _, _, Torres, N) :-
-		menuJogoAviso(Tabuleiro, Torres, N), !, false.
+		menuJogoAviso(Tabuleiro, Torres, N).
 
 
 		
