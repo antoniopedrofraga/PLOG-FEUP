@@ -1,53 +1,20 @@
+:- include('Interface.pl').
+:- include('Utilitarios.pl').
+:- include('Menus.pl').
+
 
 %--------------------------------%
 %--------Syrtis em ProLog--------%
 %--------------------------------%
-%------- escreve syrtis. --------%
+%------- escreva syrtis. --------%
 %---- na consola para correr ----%
 %--------------------------------%
 %--------------------------------%
 
-
 syrtis :-
-	B = _,
-	%criaTabuleiro(B, 0, 7),%
-	criaTabuleiroTesteFinal(B),
-	write('\n\n'),
-	imprimeTabuleiro(B, 0, 7).
+	limpaEcra,
+	menuPrincipal.
 
-%--------------------------------%
-%------Tabuleiros de teste-------%
-%--------------------------------%
-
-criaTabuleiroTesteInicial(B) :-
-	L0 = [ 'vazio', 'vazio', 'o-azul', 'quadrado-vermelho', 'o-azul', 'vazio', 'vazio'],
-	L1 = [ 'vazio', 'quadrado-vermelho', 'o-azul', 'quadrado-vermelho', 'o-vermelho', 'quadrado-vermelho', 'vazio'],
-	L2 = [ 'o-vermelho', 'o-azul', 'quadrado-azul', 'quadrado-vermelho', 'o-vermelho', 'quadrado-azul', 'quadrado-azul'],
-	L3 = [ 'o-vermelho', 'quadrado-azul', 'quadrado-azul', 'vazio', 'o-vermelho', 'o-vermelho', 'quadrado-azul'],
-	L4 = [ 'o-vermelho', 'o-vermelho', 'quadrado-azul', 'o-azul', 'o-vermelho', 'quadrado-vermelho', 'quadrado-azul'],
-	L5 = [ 'vazio', 'o-azul', 'quadrado-azul', 'o-azul', 'quadrado-vermelho', 'o-azul', 'vazio'],
-	L6 = [ 'vazio', 'vazio', 'quadrado-vermelho', 'o-azul', 'quadrado-vermelho', 'vazio', 'vazio'],
-	B = [L0, L1, L2, L3, L4, L5, L6].
-
-criaTabuleiroTesteIntermedio(B) :-
-	L0 = [ 'vazio', 'vazio', 'vazio', 'vazio', 'quadrado-azul', 'vazio', 'vazio'],
-	L1 = [ 'vazio', 'vazio', 'quadrado-vermelho', 'o-vermelho', 'o-azul', 'quadrado-vermelho', 'vazio'],
-	L2 = [ 'vazio', 'vazio', 'quadrado-vermelho', 'vazio', 'o-vermelho', 'vazio', 'vazio'],
-	L3 = [ 'vazio', 'vazio', 'quadrado-azul', 'vazio', 'vazio', 'vazio', 'vazio'],
-	L4 = [ 'vazio', 'vazio', 'o-vermelho', 'quadrado-azul', 'o-azul', 'vazio', 'vazio'],
-	L5 = [ 'vazio', 'quadrado-azul', 'o-azul', 'o-azul', 'quadrado-vermelho', 'vazio', 'vazio'],
-	L6 = [ 'vazio', 'vazio', 'vazio', 'vazio', 'vazio', 'vazio', 'vazio'],
-	B = [L0, L1, L2, L3, L4, L5, L6].
-	
-criaTabuleiroTesteFinal(B) :-
-	L0 = [ 'vazio', 'vazio', 'vazio', 'vazio', 'vazio', 'vazio', 'vazio'],
-	L1 = [ 'vazio', 'vazio', 'quadrado-azul', 'vazio','vazio', 'vazio', 'vazio'],
-	L2 = [ 'vazio', 'vazio', 'o-vermelho', 'quadrado-azul', 'vazio', 'vazio', 'vazio'],
-	L3 = [ 'vazio', 'vazio', 'o-vermelho', 'o-azul', 'o-vermelho', 'vazio', 'vazio'],
-	L4 = [ 'vazio', 'quadrado-azul', 'o-azul', 'quadrado-vermelho', 'quadrado-vermelho', 'quadrado-vermelho', 'vazio'],
-	L5 = [ 'vazio', 'vazio', 'vazio', 'vazio', 'vazio', 'vazio', 'vazio'],
-	L6 = [ 'vazio', 'vazio', 'vazio', 'vazio', 'vazio', 'vazio', 'vazio'],
-	B = [L0, L1, L2, L3, L4, L5, L6].
 	
 %-------------------------------%
 %-------------------------------%
@@ -55,6 +22,8 @@ criaTabuleiroTesteFinal(B) :-
 %----------tabuleiro------------%
 %-------------------------------%
 %-------------------------------%
+
+criaTabuleiroAleatorio(Tabuleiro2) :- B = _, criaTabuleiro(B, 0, 7), colocaPosicoes(B, Tabuleiro2).
 
 criaTabuleiro(_, A, A).
 criaTabuleiro([H | T], X, S) :-
@@ -67,87 +36,166 @@ criaLista(_, A, A).
 criaLista([H | T], X, S) :-
 	X \= S,
 	X1 is X + 1,
-	H = 'quadrado-azul',
+	H = [ vazio | vazio],
 	criaLista(T, X1, S).
-
+	
+	
 
 %------------------------------%
-%--Predicados para vizualizar--%
-%-----------tabuleiro----------%
+%---Predicados para colocar----%
+%--------casas / torres--------%
+%---------no tabuleiro---------%
 %------------------------------%
 
-interpreta('o-vermelho') :-
-	ansi_format([bold,fg(red)], '( )', []).
+%+++++++++++++++++ Colocar casas ++++++++++++++++%
 
-interpreta('o-azul') :-
-	ansi_format([bold,fg(blue)], '( )', []).
-	
-interpreta('quadrado-vermelho') :-
-	ansi_format([bold,fg(red)], '[ ]', []).
-	
-interpreta('quadrado-azul') :-
-	ansi_format([bold,fg(blue)], '[ ]', []).
+colocaPosicoes(Tabuleiro, TabuleiroFinal) :-
+	Posicoes = [ [2 , 3] , [4 , 3], [1 , 3], [5, 3], [0, 3], [6, 3], [0, 2], [6, 4], [1, 2], [5, 4], [2, 2], [4, 4], [3, 2], [3, 4], [4, 2], [2, 4], [5, 2], [1, 4], [6, 2], [0, 4],
+[1, 5], [5, 1], [4, 1], [2, 5], [3, 1], [3, 5], [2, 1], [4, 5], [1, 1], [5, 5], [2, 0], [4, 6], [3, 0], [3, 6], [4, 0], [2, 6] ],
+	colocaPosicoes(Tabuleiro, TabuleiroFinal ,Posicoes, 0).
 
-interpreta(_) :-
-	write('   ').
-
-imprimeNCol(0, 0, S) :-
-	write('   | '),
-	write('0 | '),	
-	imprimeNCol(0, 1, S).
+colocaPosicoes(Tabuleiro, TabuleiroFinal, [Cabeca | [Cabeca2 | _ ]], 34) :-
+	Casa = _,
+	CasaOposta = _,
+	NumeroRandom = _,
+	random_between(1, 4, NumeroRandom),
+	casaAleatoria(Casa, CasaOposta, NumeroRandom),
+	Tabuleiro2 = _,
+	colocaCasa(Tabuleiro, Tabuleiro2, Cabeca, Casa),
+	colocaCasa(Tabuleiro2, TabuleiroFinal, Cabeca2, CasaOposta).
 	
-imprimeNCol(0, Y, S) :-
-	Y < S,
-	write(Y),
-	write(' | '),
+colocaPosicoes(Tabuleiro, TabuleiroFinal, [Cabeca | [Cabeca2 | Cauda ]], N) :-
+	N1 is N + 2,
+	Casa = _,
+	CasaOposta = _,
+	NumeroRandom = _,
+	random_between(1, 4, NumeroRandom),
+	casaAleatoria(Casa, CasaOposta, NumeroRandom),
+	Tabuleiro2 = _,
+	colocaCasa(Tabuleiro, Tabuleiro2, Cabeca, Casa),
+	Tabuleiro3 = _,
+	colocaCasa(Tabuleiro2, Tabuleiro3, Cabeca2, CasaOposta),
+	colocaPosicoes(Tabuleiro3, TabuleiroFinal, Cauda, N1).
+	
+casaAleatoria(Casa, CasaOposta, 1) :-
+	Casa = o-vermelho,
+	CasaOposta = quadrado-azul.
+	
+casaAleatoria(Casa, CasaOposta, 2) :-
+	Casa = o-azul,
+	CasaOposta = quadrado-vermelho.
+
+casaAleatoria(Casa, CasaOposta, 3) :-
+	Casa = quadrado-vermelho,
+	CasaOposta = o-azul.
+	
+casaAleatoria(Casa, CasaOposta, 4) :-
+	Casa = quadrado-azul,
+	CasaOposta = o-vermelho.
+		
+colocaCasa(Tabuleiro, Tabuleiro2, [X | Y], Casa) :-
+	colocaCasa(Tabuleiro, Tabuleiro2, X, Y, Casa).
+
+colocaCasa(Tabuleiro, TabuleiroResultante,  X, [Y | _], Casa) :-
+	colocaCasa(Tabuleiro, TabuleiroResultante,0, 0, X, Y, Casa).
+
+	
+colocaCasa([H | T], [H2 | T2], _, Y, XLimite, YLimite, Casa) :-
+	Y == YLimite,
 	Y1 is Y + 1,
-	imprimeNCol(0, Y1, S).
+	colocaCasaEmLinha(H, H2, 0, XLimite, Casa),
+	colocaCasa(T, T2, 0, Y1, XLimite, YLimite, Casa).	
 
-imprimeNCol(0, S, S) :- 
-	write('\n'),
-	imprimeSeparador(-1, S).
-
-imprimeNCol(_, _, _).
-
-
-imprimeLinha(_,_, S, S) :-
-	write('\n').	
-
-imprimeLinha([H | T], Y, 0, S) :-
-	write(' '),
-	write(Y),
-	write(' |'),
-	interpreta(H),
-	write('|'),
-	imprimeLinha(T, Y, 1, S).
-
-imprimeLinha([H | T], Y, X, S) :- 
-	X < S,
-	interpreta(H),
-	write('|'),
-	A is X + 1,
-	imprimeLinha(T, Y, A, S).
-
-imprimeLinha(_, A, A, _) :-
-	write('\n').
+colocaCasa([H | T], [H2 | T2], _, Y, XLimite, YLimite, Casa) :-
+	Y < 7,
+	Y1 is Y + 1,
+	H2 = H,
+	colocaCasa(T, T2, 0, Y1, XLimite, YLimite, Casa).
+	
+colocaCasa(_, _, _, _, _, _, _).
 
 	
-imprimeSeparador(X, S) :-
-	X < S,
-	write(----),
-	A is X + 1,
-	imprimeSeparador(A, S).
-
-imprimeSeparador(A, A):-
-	write('\n').
-
-imprimeTabuleiro([H | T], X, S):-
-	X < S,
-	imprimeNCol(X, 0, S),
-	imprimeLinha(H, X, 0, S),
-	imprimeSeparador(-1, S), %--desde o indice -1, para cobrir os numeros das linhas--% 
+colocaCasaEmLinha([_ | T], [H2 | T2], X, XLimite, Casa) :-
+	X == XLimite,
 	X1 is X + 1,
-	imprimeTabuleiro(T, X1, S).
+	H2 = [Casa | vazio],
+	colocaCasaEmLinha(T, T2, X1, XLimite, Casa).
+
+colocaCasaEmLinha([H | T], [H2 | T2], X, XLimite, Casa) :-
+	X < 7,
+	X1 is X + 1,
+	H2 = H,
+	colocaCasaEmLinha(T, T2, X1, XLimite, Casa).
 	
-imprimeTabuleiro(_, S, S).
+colocaCasaEmLinha(_, _, _, _, _).
+
+
+%++++++++++++++++++++++ Colocar Torres ++++++++++++++++++++++%
+
+
+colocaTorre(Tabuleiro, Tabuleiro2, X, Y, [Torre | _], _) :-
+		colocaTorre(Tabuleiro, Tabuleiro2, 0, 0, X, Y, Torre).
+
+colocaTorre(Tabuleiro, _, _, _, Torres, N) :-
+		menuJogoAviso(Tabuleiro, Torres, N), !, false.
+
+
+		
+colocaTorre([H | T], [H2 | T2], _, Y, XLimite, YLimite, Torre) :-
+	Y == YLimite,
+	colocaTorreEmLinha(H, H2, 0, XLimite, Torre),
+	Y1 is Y + 1,
+	colocaTorre(T, T2, 0, Y1, XLimite, YLimite, Torre).	
+
+colocaTorre([H | T], [H2 | T2], _, Y, XLimite, YLimite, Torre) :-
+	Y < 7,
+	Y \= YLimite,
+	Y1 is Y + 1,
+	H2 = H,
+	colocaTorre(T, T2, 0, Y1, XLimite, YLimite, Torre).
+	
+colocaTorre(_, _, _, 7, _, _, _).
+
+	
+colocaTorreEmLinha([H | T], [H2 | T2], X, XLimite, Torre) :-
+	X == XLimite,
+	atribuirTorre(H, H2, Torre),
+	X1 is X + 1,
+	colocaTorreEmLinha(T, T2, X1, XLimite, Torre).
+	
+	
+colocaTorreEmLinha([H | T], [H2 | T2], X, XLimite, Torre) :-
+	X < 7,
+	X \= XLimite,
+	X1 is X + 1,
+	H2 = H,
+	colocaTorreEmLinha(T, T2, X1, XLimite, Torre).
+	
+colocaTorreEmLinha(_, _, 7, _, _).
+
+
+atribuirTorre([o-azul | _], [H2 | T2], torre-o-azul) :-
+	H2 = o-azul,
+	T2 = torre-o-azul.
+	
+	
+atribuirTorre([quadrado-azul | vazio], [H2 | T2], torre-quadrado-azul) :-
+	H2 = quadrado-azul,
+	T2 = torre-quadrado-azul.
+	
+	
+atribuirTorre([o-vermelho | vazio], [H2 | T2], torre-o-vermelho) :-
+	H2 = o-vermelho,
+	T2 = torre-o-vermelho.
+	
+	
+atribuirTorre([quadrado-vermelho | vazio], [H2 | T2], torre-quadrado-vermelho) :-
+	H2 = quadrado-vermelho,
+	T2 = torre-quadrado-vermelho.
+	
+atribuirTorre( _, _, _) :- 
+	fail.
+
+
+
 	
