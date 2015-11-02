@@ -153,5 +153,6 @@ jogo(Tabuleiro, Jogador) :-
 	novaLinha(2),
 	write('Wich move do you want to do?'),
 	novaLinha(2),
-	Jogadas = _,
-	jogadasValidas(Tabuleiro, Jogador, Jogadas).
+	jogadasValidas(Tabuleiro, Jogador, Jogadas),
+	novaLinha(3),
+	write(Jogadas).

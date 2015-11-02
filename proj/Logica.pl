@@ -24,7 +24,6 @@ jogadasValidas(Tabuleiro, Jogador, Jogadas) :-
 	
 jogadasMoveTorre(Tabuleiro, Jogador, Jogadas) :-
 	existemCasasAdjacentes(Tabuleiro, Jogador, Jogadas).
-	%jogadasAfundaTorre(Tabuleiro, Jogador, Cauda).
 
 jogadasMoveTorre(_, _, _).
 
@@ -32,10 +31,34 @@ jogadasMoveTorre(_, _, _).
 existemCasasAdjacentes(Tabuleiro, Jogador, Jogadas) :-
 	tamanhoTabuleiro(Tabuleiro, XLimite, YLimite),
 	posicoesTorre(Tabuleiro, Jogador, Px, Py, XLimite, YLimite, 1),
-	write([Px | Py]), nl,
 	posicoesTorre(Tabuleiro, Jogador, Px2, Py2, XLimite, YLimite, 2),
-	write([Px2 | Py2]).
+	existemCasasAdjacentes2(Tabuleiro, Jogador, Jogadas, Px, Py, Px2, Py2, XLimite, YLimite).
 	
+existemCasasAdjacentes2(Tabuleiro, Jogador, [H | Jogadas], Px, Py, Px2, Py2, XLimite, YLimite) :-
+	(verificaCasasAdjacentes(Tabuleiro, Jogador, Px + 1, Py, XLimite, YLimite);
+	verificaCasasAdjacentes(Tabuleiro, Jogador, Px - 1, Py, XLimite, YLimite);
+	verificaCasasAdjacentes(Tabuleiro, Jogador, Px, Py + 1, XLimite, YLimite);
+	verificaCasasAdjacentes(Tabuleiro, Jogador, Px, Py - 1, XLimite, YLimite)),
+	H = mover.
+
+existemCasasAdjacentes2(Tabuleiro, Jogador, Jogadas, Px, Py, Px2, Py2, XLimite, YLimite) :-
+	write('Falhou'), nl.
+
+verificaCasasAdjacentes(Tabuleiro, 1, Px, Py, XLimite, YLimite) :-
+	Px =< XLimite, Px >= 0, Py =< YLimite, Py >= 0,
+	obtemCasa(Tabuleiro, Casa, Px, Py),
+	(Casa == o-vermelho ; Casa == o-azul ; Casa == quadrado-azul).
+	
+verificaCasasAdjacentes(Tabuleiro, 2, Px, Py, XLimite, YLimite) :-
+	Px =< XLimite, Px >= 0, Py =< YLimite, Py >= 0,
+	obtemCasa(Tabuleiro, Casa, Px, Py),
+	(Casa == o-vermelho ; Casa == quadrado-azul ; Casa == quadrado-vermelho).
+
+
+
+
+
+
 %+++++++++++++++ Posicao das torres +++++++++++++++%
 
 posicoesTorre(Tabuleiro, 1, Px, Py, XLimite, YLimite, NTorre) :-
@@ -205,7 +228,28 @@ colocaCasaEmLinha([H | T], [H2 | T2], X, XLimite, Casa) :-
 	
 colocaCasaEmLinha(_, _, _, _, _).
 
+%++++++++++++++++++++++ Obter Casas ++++++++++++++++++++++%
 
+obtemCasa(Tabuleiro, Casa, Px, Py) :-
+	obtemCasa2(Tabuleiro, Casa, 0, Px, Py).
+	
+obtemCasa2([H | _], Casa, Y, Px, Py) :-
+	Y == Py,
+	obtemCasaLinha(H, Casa, 0, Px).
+	
+obtemCasa2([_ | T], Casa, X, Y, Px, Py) :-
+	Y1 is Y + 1,
+	obtemCasa2( T, Casa, X, Y1, Px, Py).
+	
+obtemCasaLinha([[Casa1 | _ ]| _], Casa, X, Px) :-
+	X == Px,
+	Casa = Casa1.
+
+obtemCasaLinha([_ | T], Casa, X, Px) :-
+	X1 is X + 1,
+	obtemCasaLinha(T, Casa, X1, Px).
+
+	
 %++++++++++++++++++++++ Colocar Torres ++++++++++++++++++++++%
 
 
