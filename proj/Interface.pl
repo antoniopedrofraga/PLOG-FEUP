@@ -5,20 +5,23 @@
 %-----------tabuleiro----------%
 %------------------------------%
 
+%++++++++++++++ Jogadores ++++++++++++%
 
+imprimeJogador(1) :-
+	write('Player 1 turn'), nl,
+	ansi_format([bold,fg(blue)], 'blue pieces', []).
+
+imprimeJogador(2) :-
+	write('Player 2 turn'), nl,
+	ansi_format([bold,fg(red)], 'red pieces', []).
+	
 %++++++++++++++ Torres ++++++++++++++%
 
-imprimeTorre(torre-o-vermelho) :-
-	ansi_format([bold,fg(red)], '*', []).
-	
 imprimeTorre(torre-o-azul) :-
 	ansi_format([bold,fg(blue)], '*', []).
 	
 imprimeTorre(torre-quadrado-vermelho) :-
 	ansi_format([bold,fg(red)], '#', []).
-
-imprimeTorre(torre-quadrado-azul) :-
-	ansi_format([bold,fg(blue)], '#', []).
 
 imprimeTorre(vazio) :-
 	write(' ').
