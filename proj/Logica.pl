@@ -35,22 +35,26 @@ existemCasasAdjacentes(Tabuleiro, Jogador, Jogadas) :-
 	existemCasasAdjacentes2(Tabuleiro, Jogador, Jogadas, Px, Py, Px2, Py2, XLimite, YLimite).
 	
 existemCasasAdjacentes2(Tabuleiro, Jogador, [H | Jogadas], Px, Py, Px2, Py2, XLimite, YLimite) :-
-	(verificaCasasAdjacentes(Tabuleiro, Jogador, Px + 1, Py, XLimite, YLimite);
-	verificaCasasAdjacentes(Tabuleiro, Jogador, Px - 1, Py, XLimite, YLimite);
-	verificaCasasAdjacentes(Tabuleiro, Jogador, Px, Py + 1, XLimite, YLimite);
-	verificaCasasAdjacentes(Tabuleiro, Jogador, Px, Py - 1, XLimite, YLimite)),
+	PxMais is Px + 1,
+	PxMenos is Px - 1,
+	PyMais is Py + 1,
+	PyMenos is Py - 1,
+	(verificaCasasAdjacentes(Tabuleiro, Jogador, PxMais, Py, XLimite, YLimite);
+	verificaCasasAdjacentes(Tabuleiro, Jogador, PxMenos, Py, XLimite, YLimite);
+	verificaCasasAdjacentes(Tabuleiro, Jogador, Px, PyMais, XLimite, YLimite);
+	verificaCasasAdjacentes(Tabuleiro, Jogador, Px, PyMenos, XLimite, YLimite)),
 	H = mover.
 
 existemCasasAdjacentes2(Tabuleiro, Jogador, Jogadas, Px, Py, Px2, Py2, XLimite, YLimite) :-
 	write('Falhou'), nl.
 
 verificaCasasAdjacentes(Tabuleiro, 1, Px, Py, XLimite, YLimite) :-
-	Px =< XLimite, Px >= 0, Py =< YLimite, Py >= 0,
+	Px < XLimite, Px >= 0, Py < YLimite, Py >= 0,
 	obtemCasa(Tabuleiro, Casa, Px, Py),
 	(Casa == o-vermelho ; Casa == o-azul ; Casa == quadrado-azul).
 	
 verificaCasasAdjacentes(Tabuleiro, 2, Px, Py, XLimite, YLimite) :-
-	Px =< XLimite, Px >= 0, Py =< YLimite, Py >= 0,
+	Px < XLimite, Px >= 0, Py < YLimite, Py >= 0,
 	obtemCasa(Tabuleiro, Casa, Px, Py),
 	(Casa == o-vermelho ; Casa == quadrado-azul ; Casa == quadrado-vermelho).
 
@@ -237,9 +241,9 @@ obtemCasa2([H | _], Casa, Y, Px, Py) :-
 	Y == Py,
 	obtemCasaLinha(H, Casa, 0, Px).
 	
-obtemCasa2([_ | T], Casa, X, Y, Px, Py) :-
+obtemCasa2([_ | T], Casa, Y, Px, Py) :-
 	Y1 is Y + 1,
-	obtemCasa2( T, Casa, X, Y1, Px, Py).
+	obtemCasa2( T, Casa, Y1, Px, Py).
 	
 obtemCasaLinha([[Casa1 | _ ]| _], Casa, X, Px) :-
 	X == Px,
