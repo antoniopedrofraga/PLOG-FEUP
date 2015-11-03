@@ -64,11 +64,8 @@ escolheTorres(Tabuleiro, [Torre1 | Resto], N) :-
 	write('Its time for a player to place the towers...'),
 	novaLinha(3),
 	write('Write a column number : '),
-	Coluna = _,
 	obtemNumeroDeTabuleiro(Coluna),
-	novaLinha(3),
 	write('Write a line number : '),
-	Linha = _,
 	obtemNumeroDeTabuleiro(Linha),
 	novaLinha(3),
 	Tabuleiro2 = _,
@@ -152,7 +149,94 @@ jogo(Tabuleiro, Jogador) :-
 	imprimeJogador(Jogador),
 	novaLinha(2),
 	write('Wich move do you want to do?'),
+	novaLinha(4),
+	write('1 - Pass\n2 - Move Tower\n3 - Sink Slot\n4 - Move Slot\n'),
 	novaLinha(2),
-	jogadasValidas(Tabuleiro, Jogador, Jogadas),
+	obtemNumero(Escolha, 1, 4),
+	executaJogada(Tabuleiro, Jogador, Escolha).
+	
+executaJogada(Tabuleiro, Jogador, 1) :-
+	limpaEcra,
+	write('***************************\n'),
+	write('*        You passed       *\n'),
+	write('***************************'),
+	novaLinha(4),
+	trocaJogador(Jogador, NovoJogador),
+	write('Now is\n'),
+	imprimeJogador(Jogador),
+	novaLinha(2),
+	esperaPorEnter,
+	jogo(Tabuleiro, NovoJogador).
+	
+	
+executaJogada(Tabuleiro, Jogador, 2) :-
+	limpaEcra,
+	write('***************************\n'),
+	write('*       Move a tower      *\n'),
+	write('***************************'),
 	novaLinha(3),
-	write(Jogadas).
+	imprimeTabuleiro(Tabuleiro),
+	novaLinha(2),
+	imprimeJogador(Jogador),
+	novaLinha(2),
+	write('Pick the tower to be moved'),
+	novaLinha(3),
+	tamanhoTabuleiro(Tabuleiro, XLimite, YLimite),
+	write('Write a column number : '),
+	obtemNumero(X, 0, XLimite),
+	write('Write a line number : '),
+	obtemNumero(Y, 0, YLimite),
+	verificaTorre(Tabuleiro, Jogador, X, Y, XLimite, YLimite).
+	
+
+menuMoveTorre(Tabuleiro, Jogador, X, Y) :-
+	limpaEcra,
+	write('***************************\n'),
+	write('*       Move a tower      *\n'),
+	write('***************************'),
+	novaLinha(3),
+	imprimeTabuleiro(Tabuleiro),
+	novaLinha(2),
+	imprimeJogador(Jogador),
+	novaLinha(2),
+	write('Tower -> '), imprimeTorreJogador(Jogador), write(' '), write([X | Y]),
+	novaLinha(2),
+	write('Where do you want to place this tower?'),
+	novaLinha(3),
+	tamanhoTabuleiro(Tabuleiro, XLimite, YLimite),
+	write('Write a column number : '),
+	obtemNumero(XFinal, 0, XLimite),
+	write('Write a line number : '),
+	obtemNumero(YFinal, 0, YLimite),
+	novaLinha(3),
+	write('Checking if it is a valid move, wait a second...'),
+	novaLinha(3),
+	moveTorre(Tabuleiro, Jogador, X, Y, XFinal, YFinal, XLimite, YLimite).
+	
+	
+moveTorreAviso :-
+	limpaEcra,
+	write('***************************\n'),
+	write('*          ERROR          *\n'),
+	write('***************************'),
+	novaLinha(4),
+	write('You picked a slot which is not occupied or you picked a tower from your opponent!\n'),
+	novaLinha(2),
+	write('Play again.'),
+	novaLinha(3),
+	esperaPorEnter.
+	
+moveTorreFinalAviso :-
+	limpaEcra,
+	write('***************************\n'),
+	write('*          ERROR          *\n'),
+	write('***************************'),
+	novaLinha(4),
+	write('The destination position must form an island with the initial position!\n'),
+	novaLinha(2),
+	write('Pick a move again.'),
+	novaLinha(3),
+	esperaPorEnter.
+	
+	
+	

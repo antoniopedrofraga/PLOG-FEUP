@@ -17,6 +17,13 @@ imprimeJogador(2) :-
 	
 %++++++++++++++ Torres ++++++++++++++%
 
+imprimeTorreJogador(1) :-
+	imprimeTorre(torre-o-azul).
+	
+imprimeTorreJogador(2) :-
+	imprimeTorre(torre-quadrado-vermelho).
+	
+
 imprimeTorre(torre-o-azul) :-
 	ansi_format([bold,fg(blue)], '*', []).
 	
