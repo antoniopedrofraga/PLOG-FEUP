@@ -68,8 +68,7 @@ escolheTorres(Tabuleiro, [Torre1 | Resto], N) :-
 	write('Write a line number : '),
 	obtemNumeroDeTabuleiro(Linha),
 	novaLinha(3),
-	Tabuleiro2 = _,
-	colocaTorre(Tabuleiro, Tabuleiro2, Coluna, Linha, [Torre1 | Resto], N).
+	colocaTorre(Tabuleiro, Coluna, Linha, [Torre1 | Resto], N).
 	
 escolheTorresAviso(Tabuleiro, Torres, N) :-
 	limpaEcra,
@@ -188,6 +187,27 @@ executaJogada(Tabuleiro, Jogador, 2) :-
 	obtemNumero(Y, 0, YLimite),
 	verificaTorre(Tabuleiro, Jogador, X, Y, XLimite, YLimite).
 	
+	
+executaJogada(Tabuleiro, Jogador, 3) :-
+	limpaEcra,
+	write('***************************\n'),
+	write('*        Sink a slot      *\n'),
+	write('***************************'),
+	novaLinha(3),
+	imprimeTabuleiro(Tabuleiro),
+	novaLinha(2),
+	imprimeJogador(Jogador),
+	novaLinha(2),
+	write('Pick the slot to be sink'),
+	novaLinha(3),
+	tamanhoTabuleiro(Tabuleiro, XLimite, YLimite),
+	write('Write a column number : '),
+	obtemNumero(X, 0, XLimite),
+	write('Write a line number : '),
+	obtemNumero(Y, 0, YLimite),
+	afundaCasa(Tabuleiro, Jogador, X, Y, XLimite, YLimite).
+	
+	
 
 menuMoveTorre(Tabuleiro, Jogador, X, Y) :-
 	limpaEcra,
@@ -235,6 +255,21 @@ moveTorreFinalAviso :-
 	write('The destination position must form an island with the initial position!\n'),
 	novaLinha(2),
 	write('Pick a move again.'),
+	novaLinha(3),
+	esperaPorEnter.
+	
+	
+afundaCasaFinalAviso :-
+	limpaEcra,
+	write('***************************\n'),
+	write('*          ERROR          *\n'),
+	write('***************************'),
+	novaLinha(4),
+	write('You must pick an empty slot adjacent to one of your towers!\n'),
+	novaLinha(1),
+	write('In the end of your move all tiles must be connected...'),
+	novaLinha(2),
+	write('Please play again.'),
 	novaLinha(3),
 	esperaPorEnter.
 	

@@ -57,6 +57,11 @@ obtemNumero(Escolha, LimiteBaixo, LimiteAlto) :-
 	write(LimiteAlto), write('...'),
 	novaLinha(2),!, 
 	obtemNumero(Escolha, LimiteBaixo, LimiteAlto).
+	
+tamanhoTabuleiro([H | T], XLimite, YLimite) :-
+		tamanhoLista(H, XLimite),
+		tamanhoLista(T, Tamanho),
+		YLimite is Tamanho + 1.
 
 	
 novaLinha(Vezes) :-

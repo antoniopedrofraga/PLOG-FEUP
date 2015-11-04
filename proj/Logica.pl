@@ -33,22 +33,8 @@ trocaJogador(2, NovoJogador) :-
 %-------------------------------%
 %-------------------------------%
 
-jogadasValidas(Tabuleiro, Jogador, Jogadas) :-
-	Jogadas = [ passar | Cauda ],
-	jogadasMoveTorre(Tabuleiro, Jogador, Cauda).
 	
-jogadasMoveTorre(Tabuleiro, Jogador, Jogadas) :-
-	existemCasasAdjacentes(Tabuleiro, Jogador, Jogadas).
-
-jogadasMoveTorre(_, _, _).
-
-existemCasasAdjacentes(Tabuleiro, Jogador, Jogadas) :-
-	tamanhoTabuleiro(Tabuleiro, XLimite, YLimite),
-	posicoesTorre(Tabuleiro, Jogador, Px, Py, XLimite, YLimite, 1),
-	posicoesTorre(Tabuleiro, Jogador, Px2, Py2, XLimite, YLimite, 2),
-	existemCasasAdjacentes2(Tabuleiro, Jogador, Jogadas, Px, Py, Px2, Py2, XLimite, YLimite).
-	
-existemCasasAdjacentes2(Tabuleiro, Jogador, [H | T], Px, Py, Px2, Py2, XLimite, YLimite) :-
+existemCasasAdjacentes(Tabuleiro, Jogador, Px, Py, Px2, Py2, XLimite, YLimite) :-
 	PxMais is Px + 1,
 	PxMenos is Px - 1,
 	PyMais is Py + 1,
@@ -64,12 +50,8 @@ existemCasasAdjacentes2(Tabuleiro, Jogador, [H | T], Px, Py, Px2, Py2, XLimite, 
 	(verificaCasasAdjacentes(Tabuleiro, Jogador, Px2Mais, Py, XLimite, YLimite);
 	verificaCasasAdjacentes(Tabuleiro, Jogador, Px2Menos, Py, XLimite, YLimite);
 	verificaCasasAdjacentes(Tabuleiro, Jogador, Px, Py2Mais, XLimite, YLimite);
-	verificaCasasAdjacentes(Tabuleiro, Jogador, Px, Py2Menos, XLimite, YLimite))),
-	H = mover,
-	jogadasAfundaCasa(Tabuleiro, Jogador, T, Px, Py, Px2, Py2, XLimite, YLimite).
+	verificaCasasAdjacentes(Tabuleiro, Jogador, Px, Py2Menos, XLimite, YLimite))).
 
-existemCasasAdjacentes2(Tabuleiro, Jogador, Jogadas, Px, Py, Px2, Py2, XLimite, YLimite) :-
-	jogadasAfundaCasa(Tabuleiro, Jogador, Jogadas, Px, Py, Px2, Py2, XLimite, YLimite).
 
 verificaCasasAdjacentes(Tabuleiro, 1, Px, Py, XLimite, YLimite) :-
 	Px < XLimite, Px >= 0, Py < YLimite, Py >= 0,
@@ -83,9 +65,7 @@ verificaCasasAdjacentes(Tabuleiro, 2, Px, Py, XLimite, YLimite) :-
 	
 %+++++++++++++++++ Verificar se é possível afundar casas ++++++++++++++++++%
 
-jogadasAfundaCasa(Tabuleiro, Jogador, [H | _], Px, Py, Px2, Py2, XLimite, YLimite) :-
-	write([Px | Py]), nl,
-	write([Px2 | Py2]), nl,
+jogadasAfundaCasa(Tabuleiro, Jogador, Px, Py, Px2, Py2, XLimite, YLimite) :-
 	PxMais is Px + 1,
 	PxMenos is Px - 1,
 	PyMais is Py + 1,
@@ -94,7 +74,6 @@ jogadasAfundaCasa(Tabuleiro, Jogador, [H | _], Px, Py, Px2, Py2, XLimite, YLimit
 	Px2Menos is Px2 - 1,
 	Py2Mais is Py2 + 1,
 	Py2Menos is Py2 - 1,
-	verificaAfundaCasa(Tabuleiro, Jogador, PxMais, Py, XLimite, YLimite),
 	((verificaAfundaCasa(Tabuleiro, Jogador, PxMais, Py, XLimite, YLimite);
 	verificaAfundaCasa(Tabuleiro, Jogador, PxMenos, Py, XLimite, YLimite);
 	verificaAfundaCasa(Tabuleiro, Jogador, Px, PyMais, XLimite, YLimite);
@@ -102,8 +81,7 @@ jogadasAfundaCasa(Tabuleiro, Jogador, [H | _], Px, Py, Px2, Py2, XLimite, YLimit
 	(verificaAfundaCasa(Tabuleiro, Jogador, Px2Mais, Py, XLimite, YLimite);
 	verificaAfundaCasa(Tabuleiro, Jogador, Px2Menos, Py, XLimite, YLimite);
 	verificaAfundaCasa(Tabuleiro, Jogador, Px, Py2Mais, XLimite, YLimite);
-	verificaAfundaCasa(Tabuleiro, Jogador, Px, Py2Menos, XLimite, YLimite))),
-	H = afundar.
+	verificaAfundaCasa(Tabuleiro, Jogador, Px, Py2Menos, XLimite, YLimite))).
 	
 	
 jogadasAfundaCasa(_, _, _, _, _, _, _, _, _) :-
@@ -113,11 +91,8 @@ jogadasAfundaCasa(_, _, _, _, _, _, _, _, _) :-
 verificaAfundaCasa(Tabuleiro, _, Px, Py, XLimite, YLimite) :-
 	Px < XLimite, Px >= 0, Py < YLimite, Py >= 0,
 	obtemCasaVazia(Tabuleiro, Casa, Px, Py, XLimite, YLimite),
-	(Casa == o-vermelho ; Casa == quadrado-azul ; Casa == quadrado-vermelho; Casa == o-azul),
-	afundaCasa(Tabuleiro, _ ,Px, Py, XLimite, YLimite).
+	(Casa == o-vermelho ; Casa == quadrado-azul ; Casa == quadrado-vermelho; Casa == o-azul).
 
-afundaCasa(_, _, _, _, _, _).
-	%afundaCasaPosicionada(Tabuleiro, TabuleiroFinal ,Px, Py, 0, 0, XLimite, YLimite).
 	
 %+++++++++++++++ Posicao das torres +++++++++++++++%
 
@@ -170,12 +145,6 @@ atribuiValorY([_ | T], Torre, Px, Py, Y, XLimite, YLimite, _, _) :-
 averiguarTorre([_ | T], Torre) :-
 	T == Torre.
 
-
-	
-tamanhoTabuleiro([H | T], XLimite, YLimite) :-
-		tamanhoLista(H, XLimite),
-		tamanhoLista(T, Tamanho),
-		YLimite is Tamanho + 1.
 	
 %-------------------------------%
 %-------------------------------%
@@ -359,13 +328,81 @@ obtemCasaLinha([_ | T], Casa, X, Px, XLimite) :-
 	obtemCasaLinha(T, Casa, X1, Px, XLimite).
 	
 	
+obtemTorre(Tabuleiro, Casa, Px, Py, XLimite, YLimite) :-
+	obtemTorre2(Tabuleiro, Casa, 0, Px, Py, XLimite, YLimite).
+	
+obtemTorre(_, _, _, _, _, _).
+	
+obtemTorre2([H | _], Casa, Y, Px, Py, XLimite, _) :-
+	Y == Py,
+	obtemTorreLinha(H, Casa, 0, Px, XLimite).
+	
+obtemTorre2([_ | T], Casa, Y, Px, Py, XLimite, YLimite) :-
+	Y < YLimite,
+	Y1 is Y + 1,
+	obtemTorre2( T, Casa, Y1, Px, Py, XLimite, YLimite).
+	
+obtemTorreLinha([[_ | Torre ]| _], Casa, X, Px, _) :-
+	X == Px,
+	Casa = Torre.
 
+obtemTorreLinha([_ | T], Casa, X, Px, XLimite) :-
+	X < XLimite,
+	X1 is X + 1,
+	obtemTorreLinha(T, Casa, X1, Px, XLimite).
+
+%+++++++++++++++++++++++++++ Coloca Torres +++++++++++++++++++++++++++%
+
+colocaTorreMovida(Tabuleiro, Tabuleiro2, X, Y, XLimite, YLimite, 1) :-
+		colocaTorreMovida(Tabuleiro, Tabuleiro2, 0, 0, X, Y, XLimite, YLimite, torre-o-azul).
+		
+colocaTorreMovida(Tabuleiro, Tabuleiro2, X, Y, XLimite, YLimite, 2) :-
+		colocaTorreMovida(Tabuleiro, Tabuleiro2, 0, 0, X, Y, XLimite, YLimite, torre-quadrado-vermelho).
+
+
+		
+colocaTorreMovida([H | T], [H2 | T2], _, Y, XFinal, YFinal, XLimite, YLimite, Torre) :-
+	Y == YFinal,
+	colocaTorreMovidaEmLinha(H, H2, 0, XFinal, XLimite, Torre),
+	Y1 is Y + 1,
+	colocaTorreMovida(T, T2, 0, Y1, XFinal, YFinal, XLimite, YLimite, Torre).	
+
+colocaTorreMovida([H | T], [H2 | T2], _, Y, XFinal, YFinal, XLimite, YLimite, Torre) :-
+	Y < YLimite,
+	Y1 is Y + 1,
+	H2 = H,
+	colocaTorreMovida(T, T2, 0, Y1, XFinal, YFinal, XLimite, YLimite, Torre).
+	
+colocaTorreMovida(_, _, _, _, _, _, _, _, _).
 
 	
-%++++++++++++++++++++++ Colocar Torres ++++++++++++++++++++++%
+colocaTorreMovidaEmLinha([H | T], [H2 | T2], X, XFinal ,XLimite, Torre) :-
+	X == XFinal,
+	atribuirTorreMovida(H, H2, Torre),
+	X1 is X + 1,
+	colocaTorreMovidaEmLinha(T, T2, X1, XFinal, XLimite, Torre).
+	
+	
+colocaTorreMovidaEmLinha([H | T], [H2 | T2], X, XFinal, XLimite, Torre) :-
+	X < XLimite,
+	X1 is X + 1,
+	H2 = H,
+	colocaTorreMovidaEmLinha(T, T2, X1, XFinal, XLimite, Torre).
+	
+colocaTorreMovidaEmLinha(_, _, _, _, _, _).
+
+atribuirTorreMovida([Casa | vazio], [H2 | T2], Torre) :-
+	H2 = Casa,
+	T2 = Torre.
+	
+atribuirTorreMovida( _, _, _) :-
+	fail.
+
+	
+%++++++++++++++++++++++ Colocar Torres Iniciais ++++++++++++++++++++++%
 
 
-colocaTorre(Tabuleiro, Tabuleiro2, X, Y, [Torre | Resto], N) :-
+colocaTorre(Tabuleiro, X, Y, [Torre | Resto], N) :-
 		colocaTorre(Tabuleiro, Tabuleiro2, 0, 0, X, Y, Torre),
 		N1 is N + 1,
 		escolheTorres(Tabuleiro2, Resto, N1).
@@ -419,7 +456,45 @@ atribuirTorreInicial([quadrado-vermelho | vazio], [H2 | T2], torre-quadrado-verm
 	
 atribuirTorreInicial( _, _, _) :- 
 	fail.
+
+%++++++++++++++++++++++ Remover torre +++++++++++++++++++%
+
+removeTorre(Tabuleiro, Tabuleiro2,XFinal, YFinal, XLimite, YLimite) :-
+	removeTorre(Tabuleiro, Tabuleiro2, 0, 0, XFinal, YFinal,XLimite, YLimite).
 	
+
+removeTorre([H | T], [H2 | T2], _, Y, XFinal, YFinal, XLimite, YLimite) :-
+	Y == YFinal,
+	removeTorreEmLinha(H, H2, 0, XFinal, XLimite),
+	Y1 is Y + 1,
+	removeTorre(T, T2, 0, Y1, XFinal, YFinal, XLimite, YLimite).	
+
+removeTorre([H | T], [H2 | T2], _, Y, XFinal, YFinal, XLimite, YLimite) :-
+	Y < YLimite,
+	Y \= YFinal,
+	Y1 is Y + 1,
+	H2 = H,
+	removeTorre(T, T2, 0, Y1, XFinal, YFinal, XLimite, YLimite).
+	
+removeTorre(_, _, _, _, _, _, _, _).
+
+	
+removeTorreEmLinha([[Casa1 | _] | T], [[Casa | Torre] | T2], X, XFinal, XLimite) :-
+	X == XFinal,
+	Torre = vazio,
+	Casa = Casa1,
+	X1 is X + 1,
+	removeTorreEmLinha(T, T2, X1, XFinal, XLimite).
+	
+	
+removeTorreEmLinha([H | T], [H2 | T2], X, XFinal, XLimite) :-
+	X < XLimite,
+	X \= XFinal,
+	X1 is X + 1,
+	H2 = H,
+	removeTorreEmLinha(T, T2, X1, XFinal, XLimite).
+	
+removeTorreEmLinha(_, _, _, _, _).	
 	
 %++++++++++++++ Verificar posicao de torres +++++++++++++%
 
@@ -434,7 +509,14 @@ verificaTorre(Tabuleiro, Jogador, _, _, _, _) :-
 	executaJogada(Tabuleiro, Jogador, 2).
 	
 moveTorre(Tabuleiro, Jogador, X, Y, XFinal, YFinal, XLimite, YLimite) :-
-	existeIlha(Tabuleiro, Jogador, X, Y, XFinal, YFinal, XLimite, YLimite).
+	obtemTorre(Tabuleiro, Torre, XFinal, YFinal, XLimite, YLimite),
+	Torre == vazio,
+	existeIlha(Tabuleiro, Jogador, X, Y, XFinal, YFinal, XLimite, YLimite),
+	removeTorre(Tabuleiro, Tabuleiro2, X, Y, XLimite, YLimite),
+	colocaTorreMovida(Tabuleiro2, Tabuleiro3, XFinal, YFinal, XLimite, YLimite, Jogador),
+	trocaJogador(Jogador, Jogador2),
+	jogo(Tabuleiro3, Jogador2).
+	
 	
 moveTorre(Tabuleiro, Jogador,_, _, _, _, _, _) :-
 	moveTorreFinalAviso,
@@ -589,5 +671,32 @@ verificaLista([H | T], Par) :-
 	verificaLista( T, Par).
 	
 	
+	
+%++++++++++++++++++++++++ Afunda Casa ++++++++++++++++++++++++++%	
+	
+afundaCasa(Tabuleiro, Jogador, X, Y, XLimite, YLimite) :-
+	posicoesTorre(Tabuleiro, Jogador, Px, Py, XLimite, YLimite, 1),
+	posicoesTorre(Tabuleiro, Jogador, Px2, Py2, XLimite, YLimite, 2),
+	verificaAdjacencia(Tabuleiro, Px, Py, Px2, Py2, X, Y).
+	
+afundaCasa(Tabuleiro, Jogador, X, Y, XLimite, YLimite) :-
+	afundaCasaFinalAviso,
+	jogo(Tabuleiro, Jogador).
+	
+	
+
+verificaAdjacencia(Tabuleiro, Px, Py, Px2, Py2, X, Y, XLimite, YLimite) :-
+	PxMais is Px + 1,
+	PxMenos is Px - 1,
+	PyMais is Py + 1,
+	PyMenos is Py - 1,
+	Px2Mais is Px2 + 1,
+	Px2Menos is Px2 - 1,
+	Py2Mais is Py2 + 1,
+	Py2Menos is Py2 - 1,
+	((PxMais == X, Py == Y); (PxMenos == X, Py == Y); (Px == X, PyMais == Y); (Px == X, PyMenos == Y);
+	(Px2Mais == X, Py2 == Y); (Px2Menos == X, Py2 == Y); (Px2 == X, Py2Mais == Y); (Px2 == X, Py2Menos == Y)),
+	obtemCasaVazia(Tabuleiro, Casa, Px, Py, XLimite, YLimite),
+	(Casa == o-vermelho ; Casa == o-azul ; Casa == quadrado-azul ; Casa == quadrado-vermelho).
 	
 	
