@@ -282,7 +282,12 @@ afundaCasaPosicionadaLinha([_ | T], Px, X, XLimite) :-
 %++++++++++++++++++++++ Obter Casas ++++++++++++++++++++++%
 
 obtemCasaVazia(Tabuleiro, Casa, Px, Py, XLimite, YLimite) :-
+	Px >= 0, Px < XLimite, Py >= 0, Py < YLimite,
 	obtemCasaVazia2(Tabuleiro, Casa, 0, Px, Py, XLimite, YLimite).
+	
+obtemCasaVazia(_, Casa, Px, Py, XLimite, YLimite) :-
+	(Px < 0; Px >= XLimite; Py < 0; Py >= YLimite),
+	Casa = vazio.
 	
 obtemCasaVazia2([H | _], Casa, Y, Px, Py, XLimite, _) :-
 	Y == Py,
@@ -677,15 +682,15 @@ verificaLista([H | T], Par) :-
 afundaCasa(Tabuleiro, Jogador, X, Y, XLimite, YLimite) :-
 	posicoesTorre(Tabuleiro, Jogador, Px, Py, XLimite, YLimite, 1),
 	posicoesTorre(Tabuleiro, Jogador, Px2, Py2, XLimite, YLimite, 2),
-	verificaAdjacencia(Tabuleiro, Px, Py, Px2, Py2, X, Y).
+	verificaAdjacencia(Tabuleiro, Jogador,Px, Py, Px2, Py2, X, Y, XLimite, YLimite).
 	
-afundaCasa(Tabuleiro, Jogador, X, Y, XLimite, YLimite) :-
+afundaCasa(Tabuleiro, Jogador, _, _, _, _) :-
 	afundaCasaFinalAviso,
 	jogo(Tabuleiro, Jogador).
 	
 	
 
-verificaAdjacencia(Tabuleiro, Px, Py, Px2, Py2, X, Y, XLimite, YLimite) :-
+verificaAdjacencia(Tabuleiro, _,Px, Py, Px2, Py2, X, Y, XLimite, YLimite) :-
 	PxMais is Px + 1,
 	PxMenos is Px - 1,
 	PyMais is Py + 1,
@@ -694,9 +699,62 @@ verificaAdjacencia(Tabuleiro, Px, Py, Px2, Py2, X, Y, XLimite, YLimite) :-
 	Px2Menos is Px2 - 1,
 	Py2Mais is Py2 + 1,
 	Py2Menos is Py2 - 1,
-	((PxMais == X, Py == Y); (PxMenos == X, Py == Y); (Px == X, PyMais == Y); (Px == X, PyMenos == Y);
+    ((PxMais == X, Py == Y); (PxMenos == X, Py == Y); (Px == X, PyMais == Y); (Px == X, PyMenos == Y);
 	(Px2Mais == X, Py2 == Y); (Px2Menos == X, Py2 == Y); (Px2 == X, Py2Mais == Y); (Px2 == X, Py2Menos == Y)),
-	obtemCasaVazia(Tabuleiro, Casa, Px, Py, XLimite, YLimite),
-	(Casa == o-vermelho ; Casa == o-azul ; Casa == quadrado-azul ; Casa == quadrado-vermelho).
+	obtemCasaVazia(Tabuleiro, Casa, X, Y, XLimite, YLimite),
+	(Casa == o-vermelho ; Casa == o-azul ; Casa == quadrado-azul ; Casa == quadrado-vermelho),
+	verificaVizinhanca(Tabuleiro, X, Y, XLimite, YLimite),
+	verificaTabuleiroLigado(Tabuleiro, XLimite, YLimite).
 	
+verificaAdjacencia(Tabuleiro, Jogador,_, _, _, _, _, _, _, _) :-
+	afundaCasaFinalAviso,
+	jogo(Tabuleiro, Jogador).
+	
+verificaVizinhanca(Tabuleiro, X, Y, XLimite, YLimite) :-
+	XMais is X + 1,
+	XMenos is X - 1,
+	YMais is Y + 1,
+	YMenos is Y - 1,
+	obtemCasaVazia(Tabuleiro, Casa0, XMais, Y, XLimite, YLimite),
+	obtemCasaVazia(Tabuleiro, Casa1, XMenos, Y, XLimite, YLimite),
+	obtemCasaVazia(Tabuleiro, Casa2, X, YMais, XLimite, YLimite),
+	obtemCasaVazia(Tabuleiro, Casa3, X, YMenos, XLimite, YLimite),
+	trace,
+	(Casa0 == vazio; Casa1 == vazio; Casa2 == vazio; Casa3 == vazio).
+	
+verificaTabuleiroLigado(Tabuleiro, XLimite, YLimite) :-
+	verificaTabuleiroLigado(Tabuleiro, 0, XLimite, YLimite).
+	
+	
+	
+verificaTabuleiroLigado(Tabuleiro, Y, XLimite, YLimite) :-
+	Y < YLimite,
+	obtemLinhaTabuleiroLigado(Tabuleiro, 0, Y, XLimite, YLimite),
+	Y1 is Y + 1,
+	verificaTabuleiroLigado(Tabuleiro, Y1, XLimite, YLimite).
+
+verificaTabuleiroLigado(_, Y, _, YLimite) :-
+	Y >= YLimite.
+	
+
+obtemLinhaTabuleiroLigado(Tabuleiro, X, Y, XLimite, YLimite) :-
+	X < XLimite,
+	verificaVizinhancaLigada(Tabuleiro, X, Y, XLimite, YLimite),
+	X1 is X + 1,
+	obtemLinhaTabuleiroLigado(Tabuleiro, X1, Y, XLimite, YLimite).
+	
+obtemLinhaTabuleiroLigado(_, X, _, XLimite, _) :-
+	X >= XLimite.
+	
+
+verificaVizinhancaLigada(Tabuleiro, X, Y, XLimite, YLimite) :-
+	XMais is X + 1,
+	XMenos is X - 1,
+	YMais is Y + 1,
+	YMenos is Y - 1,
+	obtemCasaVazia(Tabuleiro, Casa0, XMais, Y, XLimite, YLimite),
+	obtemCasaVazia(Tabuleiro, Casa1, XMenos, Y, XLimite, YLimite),
+	obtemCasaVazia(Tabuleiro, Casa2, X, YMais, XLimite, YLimite),
+	obtemCasaVazia(Tabuleiro, Casa3, X, YMenos, XLimite, YLimite),
+	(Casa0 \= vazio; Casa1 \= vazio; Casa2 \= vazio; Casa3 \= vazio).
 	
