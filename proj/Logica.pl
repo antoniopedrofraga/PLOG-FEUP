@@ -289,6 +289,9 @@ obtemCasaVazia(_, Casa, Px, Py, XLimite, YLimite) :-
 	(Px < 0; Px >= XLimite; Py < 0; Py >= YLimite),
 	Casa = vazio.
 	
+obtemCasaVazia(_, Casa, _, _, _, _) :-
+	Casa = ocupado.
+	
 obtemCasaVazia2([H | _], Casa, Y, Px, Py, XLimite, _) :-
 	Y == Py,
 	obtemCasaVaziaLinha(H, Casa, 0, Px, XLimite).
@@ -461,6 +464,46 @@ atribuirTorreInicial([quadrado-vermelho | vazio], [H2 | T2], torre-quadrado-verm
 	
 atribuirTorreInicial( _, _, _) :- 
 	fail.
+
+%++++++++++++++++++++++ Remover Casas +++++++++++++++++++%
+	
+removeCasa(Tabuleiro, Tabuleiro2,XFinal, YFinal, XLimite, YLimite) :-
+	removeCasa(Tabuleiro, Tabuleiro2, 0, 0, XFinal, YFinal,XLimite, YLimite).
+	
+
+removeCasa([H | T], [H2 | T2], _, Y, XFinal, YFinal, XLimite, YLimite) :-
+	Y == YFinal,
+	removeCasaEmLinha(H, H2, 0, XFinal, XLimite),
+	Y1 is Y + 1,
+	removeCasa(T, T2, 0, Y1, XFinal, YFinal, XLimite, YLimite).	
+
+removeCasa([H | T], [H2 | T2], _, Y, XFinal, YFinal, XLimite, YLimite) :-
+	Y < YLimite,
+	Y \= YFinal,
+	Y1 is Y + 1,
+	H2 = H,
+	removeCasa(T, T2, 0, Y1, XFinal, YFinal, XLimite, YLimite).
+	
+removeCasa(_, _, _, _, _, _, _, _).
+
+	
+removeCasaEmLinha([[_ | Torre1] | T], [[Casa | Torre] | T2], X, XFinal, XLimite) :-
+	X == XFinal,
+	Torre1 == vazio,
+	Torre = vazio,
+	Casa = vazio,
+	X1 is X + 1,
+	removeCasaEmLinha(T, T2, X1, XFinal, XLimite).
+	
+	
+removeCasaEmLinha([H | T], [H2 | T2], X, XFinal, XLimite) :-
+	X < XLimite,
+	X \= XFinal,
+	X1 is X + 1,
+	H2 = H,
+	removeCasaEmLinha(T, T2, X1, XFinal, XLimite).
+	
+removeCasaEmLinha(_, _, _, _, _).
 
 %++++++++++++++++++++++ Remover torre +++++++++++++++++++%
 
@@ -690,7 +733,7 @@ afundaCasa(Tabuleiro, Jogador, _, _, _, _) :-
 	
 	
 
-verificaAdjacencia(Tabuleiro, _,Px, Py, Px2, Py2, X, Y, XLimite, YLimite) :-
+verificaAdjacencia(Tabuleiro, Jogador,Px, Py, Px2, Py2, X, Y, XLimite, YLimite) :-
 	PxMais is Px + 1,
 	PxMenos is Px - 1,
 	PyMais is Py + 1,
@@ -704,7 +747,11 @@ verificaAdjacencia(Tabuleiro, _,Px, Py, Px2, Py2, X, Y, XLimite, YLimite) :-
 	obtemCasaVazia(Tabuleiro, Casa, X, Y, XLimite, YLimite),
 	(Casa == o-vermelho ; Casa == o-azul ; Casa == quadrado-azul ; Casa == quadrado-vermelho),
 	verificaVizinhanca(Tabuleiro, X, Y, XLimite, YLimite),
-	verificaTabuleiroLigado(Tabuleiro, XLimite, YLimite).
+	verificaTabuleiroLigado(Tabuleiro, XLimite, YLimite),
+	removeCasa(Tabuleiro, Tabuleiro2, X, Y, XLimite, YLimite),
+	trocaJogador(Jogador, Jogador2),
+	jogo(Tabuleiro2, Jogador2).
+	
 	
 verificaAdjacencia(Tabuleiro, Jogador,_, _, _, _, _, _, _, _) :-
 	afundaCasaFinalAviso,
@@ -719,7 +766,6 @@ verificaVizinhanca(Tabuleiro, X, Y, XLimite, YLimite) :-
 	obtemCasaVazia(Tabuleiro, Casa1, XMenos, Y, XLimite, YLimite),
 	obtemCasaVazia(Tabuleiro, Casa2, X, YMais, XLimite, YLimite),
 	obtemCasaVazia(Tabuleiro, Casa3, X, YMenos, XLimite, YLimite),
-	trace,
 	(Casa0 == vazio; Casa1 == vazio; Casa2 == vazio; Casa3 == vazio).
 	
 verificaTabuleiroLigado(Tabuleiro, XLimite, YLimite) :-
