@@ -852,6 +852,7 @@ verificaIgualdadeVazia(Tabuleiro, Lista, X, Y, XFinal, YFinal, XLimite, YLimite)
 	
 	
 
+%++++++++++++++++++++++++++ Move Casa ++++++++++++++++++++++++++++++%
 
 verificaCasa(Tabuleiro, Jogador, X, Y, XLimite, YLimite, P1Passou, P2Passou, P1Afundou, P2Afundou) :-
 		posicoesTorre(Tabuleiro, Jogador, Px, Py, XLimite, YLimite, 1),
@@ -864,4 +865,6 @@ verificaCasa(Tabuleiro, Jogador, X, Y, XLimite, YLimite, P1Passou, P2Passou, P1A
 verificaCasa(Tabuleiro, Jogador, _, _, _, _, P1Passou, P2Passou, P1Afundou, P2Afundou) :-
 		moveCasaAviso,
 		jogo(Tabuleiro, Jogador, 0, P1Passou, P2Passou, P1Afundou, P2Afundou).
+		
+
 		

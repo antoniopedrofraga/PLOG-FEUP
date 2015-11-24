@@ -306,8 +306,6 @@ executaJogada(Tabuleiro, Jogador, 4, _, P1Passou, P2Passou, P1Afundou, P2Afundou
 	verificaCasa(Tabuleiro, Jogador, X, Y, XLimite, YLimite, P1Passou, P2Passou, P1Afundou, P2Afundou).
 	
 
-	
-	
 
 menuMoveTorre(Tabuleiro, Jogador, X, Y, P1Passou, P2Passou, P1Afundou, P2Afundou) :-
 	limpaEcra,
@@ -334,7 +332,7 @@ menuMoveTorre(Tabuleiro, Jogador, X, Y, P1Passou, P2Passou, P1Afundou, P2Afundou
 	novaLinha(3),
 	moveTorre(Tabuleiro, Jogador, X, Y, XFinal, YFinal, XLimite, YLimite, P1Passou, P2Passou, P1Afundou, P2Afundou).
 	
-menuMoveCasa(Tabuleiro, Jogador, X, Y, P1Passou, P2Passou, P1Afundou, P2Afundou) :-
+menuMoveCasa(Tabuleiro, Jogador, X, Y, _, _, _, _) :-
 	limpaEcra,
 	write('***************************\n'),
 	write('*       Move a slot       *\n'),
@@ -351,9 +349,9 @@ menuMoveCasa(Tabuleiro, Jogador, X, Y, P1Passou, P2Passou, P1Afundou, P2Afundou)
 	novaLinha(3),
 	tamanhoTabuleiro(Tabuleiro, XLimite, YLimite),
 	write('Write a column number : '),
-	obtemNumero(XFinal, 0, XLimite),
+	obtemNumero(_, 0, XLimite),
 	write('Write a line number : '),
-	obtemNumero(YFinal, 0, YLimite),
+	obtemNumero(_, 0, YLimite),
 	novaLinha(3),
 	write('Checking if it is a valid move, wait a second...'),
 	novaLinha(3).
