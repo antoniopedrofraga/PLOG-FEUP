@@ -63,7 +63,7 @@ finalRandom(1, Sum, Board) :-
 
 finalRandom(1, _, _) :-
 	nl, nl, nl,
-	write('There are no more solutions available...'),
+	write('Nao ha mais solucoes disponiveis...'),
 	nl, nl,
 	abruptExit.
 	
