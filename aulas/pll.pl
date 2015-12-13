@@ -7,6 +7,7 @@ carteiro(N, L, C) :-
 	all_distinct(L),
 	soma_dif(L, C),
 	reset_timer,
+	trace,
 	labeling([maximize(C)], L),
 	print_time,
 	fd_statistics.
