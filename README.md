@@ -12,7 +12,7 @@
 
 ### Description
 
-The main goals of this subject were to understand the main concepts of [Prolog](https://en.wikipedia.org/wiki/Prolog), a programming language associated with artificial intelligence and computational linguistics.
+The main goal of this subject was to understand the main concepts of [Prolog](https://en.wikipedia.org/wiki/Prolog), a programming language associated with artificial intelligence and computational linguistics.
 
 
 ### Developers
