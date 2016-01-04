@@ -13,7 +13,6 @@ checkFirstUserChoice(3) :- start.
 checkFirstUserChoice(_)
 	:- nl, write('!!! ERRO !!! Opcao invalida, deve ser um numero entre 1 e 3. Por favor escolha novamente!'), nl, nl, false.
 	
-
 secondUserChoice :-	
 	nl, write('Esta solucao agrada-lhe?:'), nl, nl,
 	write('1 - Sim!'), nl,
@@ -27,7 +26,6 @@ checkSecondUserChoice(2) :- reset_timer, fail.
 checkSecondUserChoice(A)
 	:- A \= 1, A \= 2, nl, write('!!! ERRO !!! Opcao invalida, deve ser um numero entre 1 e 2. Por favor escolha novamente!'), nl, nl, secondUserChoice.
 	
-
 % Predicado para sair do programa, imprimindo a respetiva mensagem no ecrã.
 abruptExit :- 
 	nl, write('--------------------------------------------------------------------'), nl,
@@ -39,12 +37,10 @@ niceExit :-
 	write('Obrigado por usar o nosso programa! Para abri-lo novamente escreva ''start.'''),
 	nl, write('---------------------------------------------------------------------------'),nl, nl, abort.
 	
-	
 initializeRandomSeed:-
 	now(Usec), Seed is Usec mod 30269,
 	getrand(random(X, Y, Z, _)),
 	setrand(random(Seed, X, Y, Z)), !.
-	
 	
 reset_timer :- statistics(walltime,_).	
 print_time :-

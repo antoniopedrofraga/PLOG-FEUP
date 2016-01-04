@@ -6,9 +6,11 @@
 :- include('utilities.pl').
 :- include('randomboard.pl').
 
-% Predicado que inicia a aplicação.
+% Predicado que inicia a aplicação com as estatisticas desligadas.
 % Disponibiliza ao utilizador as opções existentes.
-start :-
+start :- starting(0).
+
+starting(Type) :-
 	write('\33\[2J'),
 	nl, write('\t\t+ - + - + - + - + - + - + - + - + - + - + - +'), nl, nl,
 	write('\t\t- - >   P I N W H E E L   P U Z Z L E   < - -'), nl, nl,
@@ -18,55 +20,76 @@ start :-
 	write('1 - Gerar um problema no modo ''soma 20''.'), nl,
 	write('2 - Gerar um problema no modo ''soma 15''.'), nl,
 	write('3 - Gerar um problema aleatorio com soma definida.'), nl,
-	write('4 - Sair do programa.'), nl, nl,
+	statisticsOn(Type),
+	write('5 - Sair do programa.'), nl, nl,
 	repeat,
-	write('Opcao (entre 1 e 4) = '),
+	write('Opcao (entre 1 e 5) = '),
 	read(Option), get_char(_),
-	checkOption(Option).
+	selectCheck(Type, Option).
 
+statisticsOn(0) :- 	write('4 - Ligar as estatisticas.'), nl.
+statisticsOn(1) :- 	write('4 - Desligar as estatisticas.'), nl.
+
+selectCheck(0, Option) :-
+	checkOffOption(Option).
+
+selectCheck(1, Option) :-
+	checkONOption(Option).
+
+% as varias listas para iniciar uma versao do problema.
 firstList([3, 4, 5, 1, 10, 8, 6, 5, 3]).
 secondList([5, 4, 6, 4, 6, 6, 4, 5, 5]).
 thirdList([5, 7, 8, 4, 5, 3, 2, 6, 7]).
 fourthList([8, 5, 6, 2, 1, 4, 6, 7, 4]).
 
-% checkOption/1 pode ter um valor entre 1 e 3. Todos os outros são opções inválidas.
-checkOption(1) :- hardMode(_).
-checkOption(2) :- easyMode(_).
-checkOption(3) :- randomMode(_).
-checkOption(4) :- abruptExit.
-checkOption(_)
-	:- nl, write('!!! ERRO !!! Opcao invalida, deve ser um numero entre 1 e 3. Por favor escolha novamente!'), nl, nl, false.
+% checkOffOption/1 pode ter um valor entre 1 e 5. Todos os outros são opções inválidas.
+checkOffOption(1) :- hardMode(0, _).
+checkOffOption(2) :- easyMode(0,_).
+checkOffOption(3) :- randomMode(0,_).
+checkOffOption(4) :- starting(1).
+checkOffOption(5) :- abruptExit.
+checkOffOption(_)
+	:- nl, write('!!! ERRO !!! Opcao invalida, deve ser um numero entre 1 e 5. Por favor escolha novamente!'), nl, nl, false.
 	
-apply_permutation([], []).
-apply_permutation([Line|Board], [ResultLine|Result]):-
+% checkONOption/1 pode ter um valor entre 1 e 5. Todos os outros são opções inválidas.
+checkONOption(1) :- hardMode(1,_).
+checkONOption(2) :- easyMode(1,_).
+checkONOption(3) :- randomMode(1,_).
+checkONOption(4) :- starting(0).
+checkONOption(5) :- abruptExit.
+checkONOption(_)
+	:- nl, write('!!! ERRO !!! Opcao invalida, deve ser um numero entre 1 e 5. Por favor escolha novamente!'), nl, nl, false.
+
+permutate([], []).
+permutate([Line|Board], [ResultLine|Result]):-
 	length(Line, N),
 	length(ResultLine, N),
 	length(P, N),
 	sorting(ResultLine, P, Line),
-	apply_permutation(Board, Result).
+	permutate(Board, Result).
 
-apply_sum([], _).
-apply_sum([Column|Columns], Sum):-
+sumBoard([], _).
+sumBoard([Column|Columns], Sum):-
 	sum(Column, #=, Sum),
-	apply_sum(Columns, Sum).
+	sumBoard(Columns, Sum).
 	
-sort_board([], []).
-sort_board([L|B], [SL|SB]):- samsort(L, SL),
-   sort_board(B, SB).
+sortBoard([], []).
+sortBoard([L|B], [SL|SB]):- samsort(L, SL),
+   sortBoard(B, SB).
 
 solver(Board, Result, Sum):-
-    sort_board(Board, Sorted),
-    apply_permutation(Sorted, Result),
+    sortBoard(Board, Sorted),
+    permutate(Sorted, Result),
     transpose(Result, Columns),
-    apply_sum(Columns, Sum),
-    flatten_list(Result, Results),
+    sumBoard(Columns, Sum),
+    flattenList(Result, Results),
     labeling([], Results).
 							   
-flatten_list([],[]).
-flatten_list([L1|Ls], Lf):- is_list(L1), flatten_list(L1, L2), append(L2, Ld, Lf), flatten_list(Ls, Ld).
-flatten_list([L1|Ls], [L1|Lf]):- \+is_list(L1), flatten_list(Ls, Lf).
+flattenList([],[]).
+flattenList([L1|Ls], Lf):- is_list(L1), flattenList(L1, L2), append(L2, Ld, Lf), flattenList(Ls, Ld).
+flattenList([L1|Ls], [L1|Lf]):- \+is_list(L1), flattenList(Ls, Lf).
 
-easyMode(Result) :-
+easyMode(Statistics, Result) :-
 	write('\33\[2J'),
 	nl, write('\t\t + - + - + - + - + - + - + - + - + - + - + - +'), nl, nl,
 	write('\t\t - - >  P I N W H E E L - S O M A   1 5  < - -'), nl, nl,
@@ -82,9 +105,9 @@ easyMode(Result) :-
 	shuffleList(L2, RL2),
 	shuffleList(L3, RL3),
 	drawBoard([RL1, RL2, RL3]), firstUserChoice(Choice), 
-	easyModeNext(Choice, Result, RL1, RL2, RL3).
+	easyModeNext(Statistics, Choice, Result, RL1, RL2, RL3).
 	
-hardMode(Result) :-
+hardMode(Statistics, Result) :-
 	write('\33\[2J'),
 	nl, write('\t\t + - + - + - + - + - + - + - + - + - + - + - +'), nl, nl,
 	write('\t\t - - >  P I N W H E E L - S O M A   2 0  < - -'), nl, nl,
@@ -102,25 +125,31 @@ hardMode(Result) :-
 	shuffleList(L3, RL3),
 	shuffleList(L4, RL4),
 	drawBoard([RL1, RL2, RL3, RL4]), firstUserChoice(Choice),
-	hardModeNext(Choice, Result, RL1, RL2, RL3, RL4).
+	hardModeNext(Statistics, Choice, Result, RL1, RL2, RL3, RL4).
 	
-hardModeNext(1, Result, RL1, RL2, RL3, RL4) :-
+hardModeNext(1, 1, Result, RL1, RL2, RL3, RL4) :-
 	reset_timer,
 	solver([RL1, RL2, RL3, RL4], Result, 20), nl, print_time, fd_statistics,
+	nl, drawBoard(Result), secondUserChoice, fail.
+hardModeNext(0, 1, Result, RL1, RL2, RL3, RL4) :-
+	solver([RL1, RL2, RL3, RL4], Result, 20),
 	nl, drawBoard(Result), secondUserChoice, fail.	
-hardModeNext(2, Result, _, _, _, _) :-
-	hardMode(Result).
+hardModeNext(Statistics, 2, Result, _, _, _, _) :-
+	hardMode(Statistics, Result).
 	
-easyModeNext(1, Result, RL1, RL2, RL3) :-
+easyModeNext(1, 1, Result, RL1, RL2, RL3) :-
 	reset_timer,
 	solver([RL1, RL2, RL3], Result, 15), nl, print_time, fd_statistics,
+	nl, drawBoard(Result), secondUserChoice, fail.
+easyModeNext(0, 1, Result, RL1, RL2, RL3) :-
+	solver([RL1, RL2, RL3], Result, 15),
 	nl, drawBoard(Result), secondUserChoice, fail.	
-easyModeNext(2, Result, _, _, _) :-
-	easyMode(Result).
+easyModeNext(Statistics, 2, Result, _, _, _) :-
+	easyMode(Statistics, Result).
 	
 shuffleList(A, B) :- random_permutation(A, B).
 
-sumBoard(B, Sum) :-
+sumBigBoard(B, Sum) :-
 	transpose(B, NewB),
 	sumColumns(NewB, [], Sum).
 
@@ -150,7 +179,7 @@ drawBoard([X | Xs], S, SumList) :-
 	drawBoard(Xs, S, SumList), !.
 
 drawBoard([X | Xs]) :-
-	sumBoard([X | Xs], SumList),
+	sumBigBoard([X | Xs], SumList),
 	getSize([X | Xs], S),
 	write('\t    +'), drawTop(S),
 	write('\t    |'), drawMiddle(S),
