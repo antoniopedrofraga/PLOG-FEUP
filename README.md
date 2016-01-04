@@ -35,9 +35,9 @@ Figure 1                    |  Figure 2                    | Figure 3
 
 ### [Pinwheel] (./Pinwheel)
 
-The main goal was to create a program with restrictions, solving an optimization problem. We created a random generator of a Pinwheel puzzle, solving it after the generation. 
+The main goal was to create a program with restrictions by solving an optimization problem. We created a random generator of a Pinwheel puzzle, solving it after the generation. 
 
 
-Figure 1                    |  Figure 2
+Figure 4                    |  Figure 5
 :-------------------------:|:-------------------------:|
 ![](https://raw.githubusercontent.com/pedrofraga/PLOG-FEUP/master/img/p2fig1.png)  |  ![](https://raw.githubusercontent.com/pedrofraga/PLOG-FEUP/master/img/p2fig2.png)   
