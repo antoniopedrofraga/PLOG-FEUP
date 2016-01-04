@@ -22,7 +22,7 @@ The main goal of this subject was to understand the main concepts of [Prolog](ht
 
 ### [Syrtis] (./Syrtis)
 
-It was intended to create a multiplayer board game in this programming language building a text interface. A game that was characterized by tiles and pieces types,
+It was intended to create a multiplayer board game and build a text interface in this programming language. A game that was characterized by tiles and pieces types,
 movimentation rules and termination conditions. 
 
 
