@@ -2,10 +2,10 @@
 
 ## Index
 
-1. [Description] (#description)
-2. [Developers] (#developers)
-3. [Syrtis] (#syrtis)
-4. [Pinwheel] (#pinwheel)
+1. [Description](#description)
+2. [Developers](#developers)
+3. [Syrtis](#syrtis)
+4. [Pinwheel](#pinwheel)
 
 
 ***
@@ -17,8 +17,8 @@ The main goal of this subject was to understand the main concepts of [Prolog](ht
 
 ### Developers
 
-* [Pedro Fraga] (https://github.com/pedrofraga) 
-* [Pedro Martins] (https://github.com/esquilofeup)
+* [Pedro Fraga](https://github.com/pedrofraga) 
+* [Pedro Martins](https://github.com/esquilofeup)
 
 ### [Syrtis] (./Syrtis)
 
