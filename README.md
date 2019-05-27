@@ -20,7 +20,7 @@ The main goal of this subject was to understand the main concepts of [Prolog](ht
 * [Pedro Fraga](https://github.com/pedrofraga) 
 * [Pedro Martins](https://github.com/esquilofeup)
 
-### [Syrtis] (./Syrtis)
+### [Syrtis](./Syrtis)
 
 It was intended to create a multiplayer board game and build a text interface in this programming language. A game that was characterized by tiles and pieces types,
 movimentation rules and termination conditions. 
@@ -33,7 +33,7 @@ Figure 1                    |  Figure 2                    | Figure 3
 ![](https://raw.githubusercontent.com/pedrofraga/PLOG-FEUP/master/img/p1fig1.png)  |  ![](https://github.com/pedrofraga/PLOG-FEUP/blob/master/img/p1fig2.png)   |  ![](https://raw.githubusercontent.com/pedrofraga/PLOG-FEUP/master/img/p1fig3.png)
 
 
-### [Pinwheel] (./Pinwheel)
+### [Pinwheel](./Pinwheel)
 
 The main goal was to create a program with restrictions by solving an optimization problem. We created a random generator of a Pinwheel puzzle, solving it after the generation. 
 
